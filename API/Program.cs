@@ -1,15 +1,19 @@
+using System.Text;
 using API.Data;
+using API.Extensions;
+using API.Interfaces;
+using API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
+var _config = builder.Configuration;
 
 // Add services to the container.
-builder.Services.AddDbContext<DataContext>(options =>
-{
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-}
-);
+builder.Services.AddApplicationServices(_config);
+
 
 builder.Services.AddCors(options =>
 {
@@ -19,6 +23,8 @@ builder.Services.AddCors(options =>
                           policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
                       });
 });
+
+builder.Services.AddIdentityServices(_config);
 
 builder.Services.AddControllers();
 
@@ -40,6 +46,8 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseCors(MyAllowSpecificOrigins);
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
