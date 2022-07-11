@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,6 +17,7 @@ namespace API.Controllers
             _context = context;
         }
 
+        //500
         [HttpGet("server-error")]
         public ActionResult<string> GetServerError()
         {
@@ -24,6 +26,32 @@ namespace API.Controllers
             var thingToReturn = thing.ToString();
 
             return thingToReturn;
+        }
+
+        //404
+        [HttpGet("not-found")]
+        public ActionResult<AppUser> GetNotFoundError()
+        {
+            var thing = _context.Users.Find(-1);
+
+            if (thing == null) return NotFound();
+
+            return Ok(thing);
+        }
+
+        //401
+        [Authorize]
+        [HttpGet("auth")]
+        public ActionResult<string> GetUnauthorizedError()
+        {
+            return "auth test";
+        }
+
+        //400
+        [HttpGet("bad-request")]
+        public ActionResult<string> GetBadRequest()
+        {
+            return BadRequest("Yo! This is not a valid request");
         }
     }
 }

@@ -1,0 +1,8 @@
+<div class="container-fluid" style="height: 100vh; margin-top: 250px;">
+    <h1 class="text-center">Internal Server Error</h1>
+    <ng-container *ngIf="error">
+        <h5 class="text-warning mt-5">Error: {{error.message}}</h5>
+        <p my-1>Stack Trace:</p>
+        <code class="mt-5 text-danger">{{error.details}}</code>
+    </ng-container>
+</div>
